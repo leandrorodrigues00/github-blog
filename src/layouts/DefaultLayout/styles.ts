@@ -1,10 +1,13 @@
 import styled from "styled-components";
 
 export const LayoutContainer = styled.div`
-  .container {
-    max-width: 54rem;
+  > main {
     width: 100%;
-    margin-right: auto;
-    margin-left: auto;
+    max-width: 54rem;
+    margin: 0 auto;
+
+    @media (max-width: 50rem) {
+      padding: 0 1rem;
+    }
   }
 `;

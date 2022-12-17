@@ -1,23 +1,64 @@
-import { PostsSummary } from "./components/PostsSummary";
-import { ProfileCard } from "./components/ProfileCard";
+import { useEffect, useState } from "react";
+import { Spinner } from "../../components/Spinner";
+import { api } from "../../lib/axios";
+import { Post } from "./components/Post";
+import { Profile } from "./components/Profile";
 import { SearchInput } from "./components/SearchInput";
-import { HomeContainer, PostsContainer } from "./styles";
+import { PostsListContainer } from "./styles";
+
+export interface IPost {
+  title: string;
+  body: string;
+  created_at: string;
+  number: number;
+  html_url: string;
+  comments: number;
+  user: {
+    login: string;
+  };
+}
+
+const username = import.meta.env.VITE_GITHUB_USERNAME;
+const repoName = import.meta.env.VITE_GITHUB_REPONAME;
 
 export function Home() {
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const totalNumberPosts = posts.length;
+
+  const getPosts = async (query: string = "") => {
+    try {
+      setIsLoading(true);
+      const response = await api.get(
+        `/search/issues?q=${query}%20label:published%20repo:${username}/${repoName}`
+      );
+      setPosts(response.data.items);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
   return (
-    <HomeContainer className="container">
-      <ProfileCard />
-      <SearchInput />
+    <>
+      <Profile />
+      <SearchInput postsLength={totalNumberPosts} getPosts={getPosts} />
 
-      <PostsContainer>
-        <PostsSummary />
-
-        <PostsSummary />
-        <PostsSummary />
-        <PostsSummary />
-        <PostsSummary />
-        <PostsSummary />
-      </PostsContainer>
-    </HomeContainer>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          <PostsListContainer>
+            {posts.map((post) => (
+              <Post key={post.number} post={post} />
+            ))}
+          </PostsListContainer>
+        </>
+      )}
+    </>
   );
 }

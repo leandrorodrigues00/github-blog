@@ -1,12 +1,9 @@
 import styled from "styled-components";
 
-export const HomeContainer = styled.main``;
-
-export const PostsContainer = styled.div`
-  margin-top: 3rem;
+export const PostsListContainer = styled.section`
+  width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr));
   gap: 2rem;
-
-  margin-bottom: 14.625rem;
+  margin-bottom: 14rem;
 `;
