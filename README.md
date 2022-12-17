@@ -1,4 +1,4 @@
-# Github Blog - React + Github issues, your personal blog 👨‍💻
+# Github Blog - Your personal blog 💻
 
 <br><br>
 
